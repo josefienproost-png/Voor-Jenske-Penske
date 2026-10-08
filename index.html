@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voor Mijn Liefje ❤️</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #fffdf0 0%, #fef9d7 100%);
+      color: #4a422d;
+      margin: 0;
+      padding: 20px 20px 100px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* INTRO SCHERM (CADEAU OVERLAY) */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #fffdf0 0%, #fef8cc 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .intro-card {
+      background: rgba(255, 254, 245, 0.95);
+      border: 3px solid #f2c94c;
+      border-radius: 25px;
+      padding: 40px 30px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 15px 35px rgba(220, 200, 120, 0.3);
+      animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .intro-title {
+      color: #d4a017;
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 0px #fff;
+    }
+    .intro-text {
+      font-size: 1.1rem;
+      color: #6a5a2d;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    .open-btn {
+      background: linear-gradient(45deg, #f2c94c, #f2994a);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(242, 180, 76, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .open-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(242, 180, 76, 0.7);
+    }
+
+    /* ZWEVENDE EENDJES & DINO'S */
+    .floating-icon {
+      position: fixed;
+      font-size: 28px;
+      animation: floatUp 8s linear infinite;
+      opacity: 0.6;
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .container {
+      max-width: 650px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .card {
+      background: rgba(255, 254, 245, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(220, 200, 120, 0.2);
+      border: 2px solid #fff;
+      animation: fadeIn 0.8s ease-out;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: #d4a017;
+      text-align: center;
+      font-size: 2.2rem;
+      text-shadow: 2px 2px 0px #fff;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite alternate;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.03); }
+    }
+
+    h2 { color: #c88f11; font-size: 1.4rem; margin-top: 0; }
+
+    /* LIEVE QUOTE */
+    .quote-box {
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #7a5e10;
+      text-align: center;
+      line-height: 1.6;
+      padding: 15px;
+      background: #fffbe6;
+      border-radius: 12px;
+      border-left: 4px solid #f2c94c;
+    }
+
+    /* DAGEN TELLER STIJL */
+    .counter-card {
+      text-align: center;
+      background: #fff8dc;
+      border: 2px dashed #e6c200;
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+    .counter-days-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #d4a017;
+      margin: 5px 0;
+    }
+    .counter-text {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #7a5e10;
+    }
+
+    /* LIEFDESCOUPON STIJL */
+    .coupon-card {
+      background: linear-gradient(135deg, #fff3b0 0%, #ffe699 100%);
+      border: 2px dashed #d4a017;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 6px 15px rgba(212, 160, 23, 0.15);
+    }
+    .coupon-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #8b6b10;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .coupon-value {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #5a4b22;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    .coupon-btn {
+      background: #d4a017;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .coupon-btn:hover {
+      transform: scale(1.05);
+      background: #b8860b;
+    }
+    #couponStatus {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #27ae60;
+      display: none;
+      animation: popIn 0.5s ease;
+    }
+
+    /* TIJDLIN */
+    .timeline {
+      border-left: 3px dashed #f2c94c;
+      padding-left: 20px;
+      margin-left: 10px;
+    }
+    .timeline-item {
+      margin-bottom: 25px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '🐣';
+      position: absolute;
+      left: -32px;
+      top: 0;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .item-content {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .item-text { flex: 1; }
+    .item-text p {
+      margin: 5px 0 0 0;
+      color: #6a5a2d;
+      line-height: 1.5;
+    }
+    .timeline-img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      border: 2px solid #fff;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 520px) {
+      .item-content {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+      }
+      .timeline-img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+
+    /* VASTE MUZIEKBALK ONDERAAN SCHERM */
+    .music-bar {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 550px;
+      background: rgba(255, 253, 240, 0.98);
+      border: 2px solid #f2c94c;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      border-radius: 50px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .music-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #6a5a2d;
+    }
+    .music-btn-play {
+      background: linear-gradient(45deg, #f2c94c, #f2994a);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(242, 180, 76, 0.4);
+      white-space: nowrap;
+    }
+
+    /* KNUFFELKNOP */
+    .hug-card {
+      text-align: center;
+      background: #fff8dc;
+      border: 2px solid #f2c94c;
+    }
+    .hug-btn {
+      background: linear-gradient(45deg, #f2c94c, #f2994a);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 6px 18px rgba(242, 180, 76, 0.5);
+      transition: all 0.2s;
+    }
+    .hug-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 22px rgba(242, 180, 76, 0.7);
+    }
+
+    #hug-message {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 15px;
+      display: none;
+      color: #a37200;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* CONFETTI ANIMATIE */
+    .confetti {
+      position: fixed;
+      font-size: 24px;
+      pointer-events: none;
+      z-index: 999;
+      animation: explode 1.5s ease-out forwards;
+    }
+    @keyframes explode {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- INTRO SCHERM (CADEAU VERPAKKING) -->
+  <div id="intro-screen">
+    <div class="intro-card">
+      <div style="font-size: 50px; margin-bottom: 10px;">🎁🐣</div>
+      <h2 class="intro-title">Hoi Liefje! ❤️</h2>
+      <p class="intro-text">Er staat hier een klein digitaal cadeautje voor je klaar vol eendjes, dino's en al onze mooie herinneringen...</p>
+      <button class="open-btn" onclick="openGift()">Open jouw cadeautje! ✨</button>
+    </div>
+  </div>
+
+  <!-- Zwevende Eendjes & Dino's -->
+  <div class="floating-icon" style="left: 8%; animation-delay: 0s;">🦆</div>
+  <div class="floating-icon" style="left: 25%; animation-delay: 2s;">🦕</div>
+  <div class="floating-icon" style="left: 45%; animation-delay: 1s;">🦆</div>
+  <div class="floating-icon" style="left: 68%; animation-delay: 3s;">🦖</div>
+  <div class="floating-icon" style="left: 88%; animation-delay: 1.5s;">🐥</div>
+
+  <div class="container">
+    <h1>Voor Mijn Liefje ❤️</h1>
+
+    <!-- LIEVE BOODSCHAP & LIVE TELLER -->
+    <div class="card">
+      <div class="quote-box">
+        "Wat er ook komen gaat, weet dat ik naast je sta en hier nooit weg zal gaan." 💖
+      </div>
+      
+      <!-- DAGEN TELLER -->
+      <div class="counter-card">
+        <div class="counter-text">Samen sinds 26 juni 2026 ❤️</div>
+        <div class="counter-days-number" id="daysCountNumber">0</div>
+        <div class="counter-text">Dagen vol mooie herinneringen!</div>
+      </div>
+    </div>
+
+    <!-- LIEFDESCOUPON -->
+    <div class="card">
+      <div class="coupon-card">
+        <div class="coupon-title">🎟️ Officiële Liefdescoupon 🎟️</div>
+        <div class="coupon-value">Goed voor 1x Date Night volledig op Josefien haar kosten! 🍽️✨</div>
+        <button class="coupon-btn" id="claimBtn" onclick="claimCoupon(event)">Claim je Date Night! 💳✨</button>
+        <div id="couponStatus">✅ GECLAIMD! Kies maar snel een datum, ik trakteer! 🥰🎉</div>
+      </div>
+    </div>
+
+    <!-- TIJDLIN -->
+    <div class="card">
+      <h2>📅 Onze Tijdlijn</h2>
+      <div class="timeline">
+        
+        <div class="timeline-item">
+          <strong>15 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Eerste match gemaakt op Bumble met de prachtige openingsvraag: ”Wat is je favoriete dino?” en mijn geniaal maar gedurfd antwoord waar ik meteen mijn psychische onstabiliteit blootlegde.</p>
+            </div>
+            <img src="foto1.jpg" class="timeline-img" alt="15 juni">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>16 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>EINDELIJK antwoord van Jens. Nu is de bal echt aan het rollen gegaan tot in de late uurtjes.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>19 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Josefien gaat winkelen en ziet prachtige KURT schoenen. Een mooie verwijzing naar de hond van Rientje en Luc in Nonkels. Ook wordt Jens verwend met een selfie à la Josefien met Free.</p>
+            </div>
+            <img src="foto2.jpg" class="timeline-img" alt="19 juni">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>21 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>De eerste selfie van Jensie is een feit! In een bloedheet kot weliswaar. Duidelijk niet veel veranderd hè…?</p>
+            </div>
+            <img src="foto3.jpg" class="timeline-img" alt="21 juni">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>26 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>De eerste date is een feit! En wat voor één… Na een dag gevuld met hertjes, dazen en mooie bloemetjes gingen we allebei met een voldaan hart slapen die nacht.</p>
+            </div>
+            <img src="foto4.jpg" class="timeline-img" alt="26 juni">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>29 juni</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>We vonden het zo leuk dat de 2de date onmogelijk kon uitblijven. Nog voor je op reis vertrok hebben we een prachtige wandeling gemaakt in het idyllische platteland van Averbode, gepaard met een intieme knuffel.</p>
+            </div>
+            <img src="foto5.jpg" class="timeline-img" alt="29 juni">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>1 - 9 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Jij was op reis maar om onze unieke connectie niet te verliezen belden we élke dag. Ik voelde me echt een prinses. Rotverwend.</p>
+            </div>
+            <img src="foto6.jpg" class="timeline-img" alt="1-9 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>10 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Één van de leukste avonden in mijn leven. Je zou bijna denken dat de Rode Duivels hadden gewonnen… Je kreeg al meteen de goedkeuring van Linde.</p>
+            </div>
+            <img src="foto7.jpg" class="timeline-img" alt="10 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>12 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Lang konden we elkaar niet missen dus een dagje aan het Zilvermeer leek ons perfect om elkaar op een andere manier te leren kennen. Onze onschuldige zielen durfden toch steeds meer ;).</p>
+            </div>
+            <img src="foto8.jpg" class="timeline-img" alt="12 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>14 - 15 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Sleepover time! En jij nam de ‘sleep’ hierin zeer letterlijk. De fameuze broek onder mijn bed zal ik ook niet snel vergeten.</p>
+            </div>
+            <img src="foto9.jpg" class="timeline-img" alt="14-15 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>21 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>’t Zilvermeer was zo leuk dat we besloten om de ‘speelsheid’ in ons Bumble-profiel waar te maken en ons te gaan amuseren op het aquapark in de Lilse Bergen. Blauwe plekken had ik met hopen maar dat was een prachtige herinnering aan deze zonovergoten dag.</p>
+            </div>
+            <img src="foto10.jpg" class="timeline-img" alt="21 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>27 juli</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Als je Josefien zegt, zeg je shoppen dus op naar Antwerpen! Meteen al een voorproefje geven van wat je later nog veel mag verwachten!</p>
+            </div>
+            <img src="foto11.jpg" class="timeline-img" alt="27 juli">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>1 - 2 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Tijd met overschot in de vakantie dus waren we voor 1 dag professionele oppasser van Odet. Het gras moest goed verzorgd worden bij jullie (sounds like Willy Persyn) dus maakten we een tripje naar Pulle waar we een wondermooie nacht hebben beleefd.</p>
+            </div>
+            <img src="foto12.jpg" class="timeline-img" alt="1-2 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>6 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Een langverwachte daguitstap naar Lier! Ook deze avond staat gebrand in mijn geheugen. Ik pleit voor een gele Mercedes met nummerplaat ‘PDG’ op onze trouw!</p>
+            </div>
+            <img src="foto13.jpg" class="timeline-img" alt="6 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>8 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Onze beruchte wijnavond. Met wat restjes vervallen pesto in onze magen zijn we een lange nacht tegemoet gegaan, en het toilet ook… Voelde me ook weer een prinses, dan wel een brakke, in de ochtend met je verwennerijen.</p>
+            </div>
+            <img src="foto14.jpg" class="timeline-img" alt="8 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>14 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Tijd voor een dubbeldate, woehoe! Uiteindelijk is dit nog een enorm leuke avond geworden waarin ik enorm veel heb afgelachen. Ook over mijn rij-angsten gekomen, let’s go!</p>
+            </div>
+            <img src="foto15.jpg" class="timeline-img" alt="14 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>18 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Een avond waarbij alle restaurants vol zaten en we zijn gesetteld voor een onverwachts goede zwembad brasserie. Veel diepe, moeilijke maar broodnodige gesprekken gehad. Een avond waar we allebei gegroeid zijn in de relatie, ook al was dit niet altijd even comfortabel.</p>
+            </div>
+            <img src="foto16.jpg" class="timeline-img" alt="18 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>22 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Eindelijks kon je me meenemen naar Lierse. Ik had het niet verwacht maar ik heb enorm genoten van deze avond. Ook met dank aan je lieve vrienden die me een comfortabel gevoel gaven om mezelf te zijn.</p>
+            </div>
+            <img src="foto17.jpg" class="timeline-img" alt="22 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>25 - 26 augustus</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>By far ook één van de leukste avonden van de vakantie. Ik mocht je kot komen bewonderen en meteen ondersmossen met witte wijn tijdens Mario Kart. Deze gesprekken draag ik voor eeuwig mee in mijn hartje.</p>
+            </div>
+            <img src="foto18.jpg" class="timeline-img" alt="25-26 augustus">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>7 - 8 september</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>2de keer experience factory. En wat voor één! Bezweet waren we alleszins wel, maar onze mond stond die avond zeker niet stil. Cruciale gesprekken gehad met uitzicht op de parking van de McDonald's, ook in samenwerking met de lekkere cocktails maar dat is bijzaak.</p>
+            </div>
+            <img src="foto19.jpg" class="timeline-img" alt="7-8 september">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>9 - 16 september</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Josefien op vakantie, Jensie thuis. Veel gebeld en gepiekerd over de toekomst. Zo blij dat ik was toen ik je zag staan naast de auto…</p>
+            </div>
+            <img src="foto20.jpg" class="timeline-img" alt="9-16 september">
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <strong>19 - 20 september</strong>
+          <div class="item-content">
+            <div class="item-text">
+              <p>Een avond waar ik erg naar had uitgekeken, Napoleon de musical! Ik was zo blij dat jij er uiteindelijk ook iets aan had. In de avond dansen op hits zoals ‘You’re the one that I want’ zal me ook altijd bijblijven. Eentje die ik dicht bij me houdt.</p>
+            </div>
+            <img src="foto21.jpg" class="timeline-img" alt="19-20 september">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIRTUELE KNUFFEL & LIEVE QUOTE -->
+    <div class="card hug-card">
+      <h2>🫂 Virtuele Knuffel</h2>
+      <p style="text-align:center; color: #6a5a2d; font-style: italic; margin-bottom: 15px;">
+        "Je hoeft niet te weten hoe alles gaat aflopen om te mogen genieten van hoe het nu is." ✨
+      </p>
+      <button class="hug-btn" onclick="sendHug(event)">Druk hier voor een knuffel! 🤗</button>
+      <div id="hug-message">🫂 Knuffeltje van Josefien is onderweg! ❤️✨</div>
+    </div>
+
+  </div>
+
+  <!-- VASTE MUZIEKBALK ONDERAAN SCHERM -->
+  <div class="music-bar">
+    <div class="music-info">
+      <span>🎵</span>
+      <span>Bart Peeters - Hoeveel ik van je hou</span>
+    </div>
+    <button class="music-btn-play" onclick="togglePlay()" id="playBtn">▶️ Muziek aan</button>
+    <audio id="bgMusic" loop src="hoeveel-ik-van-je-hou.mp3"></audio>
+  </div>
+
+  <script>
+    // INTRO SCHERM WEGHALEN EN MUZIEK DIRECT STARTEN
+    function openGift() {
+      const intro = document.getElementById('intro-screen');
+      intro.style.opacity = '0';
+      setTimeout(() => {
+        intro.style.display = 'none';
+      }, 800);
+
+      // Start ook direct de muziek achter de schermen
+      const audio = document.getElementById('bgMusic');
+      const btn = document.getElementById('playBtn');
+      audio.play().then(() => {
+        btn.innerText = "⏸️ Pauzeer";
+      }).catch(err => {
+        console.log("Autoplay geblokkeerd, gebruiker kan via de balk starten.");
+      });
+    }
+
+    // EXACTE DAGEN TELLER SINDS 26 JUNI 2026
+    function updateDaysCounter() {
+      const startDate = new Date(2026, 5, 26);
+      const today = new Date();
+      
+      const diffTime = today - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      document.getElementById('daysCountNumber').innerText = diffDays > 0 ? diffDays : 0;
+    }
+
+    updateDaysCounter();
+
+    // COUPON CLAIMEN
+    function claimCoupon(e) {
+      document.getElementById('couponStatus').style.display = 'block';
+      document.getElementById('claimBtn').style.display = 'none';
+      createConfettiEffect(e);
+    }
+
+    // MUZIEK BEDIENING
+    function togglePlay() {
+      const audio = document.getElementById('bgMusic');
+      const btn = document.getElementById('playBtn');
+      
+      if (audio.paused) {
+        audio.play().then(() => {
+          btn.innerText = "⏸️ Pauzeer";
+        }).catch(err => {
+          alert("Zorg dat 'hoeveel-ik-van-je-hou.mp3' op je Bureaublad staat!");
+        });
+      } else {
+        audio.pause();
+        btn.innerText = "▶️ Muziek aan";
+      }
+    }
+
+    // KNUFFELKNOP
+    function sendHug(e) {
+      document.getElementById('hug-message').style.display = 'block';
+      createConfettiEffect(e);
+    }
+
+    // CONFETTI EFFECT
+    function createConfettiEffect(e) {
+      const symbols = ['❤️', '💖', '🦆', '🦕', '✨', '💛', '🎟️', '🥂'];
+      for (let i = 0; i < 25; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        confetti.style.left = e.clientX + 'px';
+        confetti.style.top = e.clientY + 'px';
+        
+        const dx = (Math.random() - 0.5) * 350 + 'px';
+        const dy = (Math.random() - 0.5) * 350 + 'px';
+        confetti.style.setProperty('--dx', dx);
+        confetti.style.setProperty('--dy', dy);
+        
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 1500);
+      }
+    }
+  </script>
+
+</body>
+</html>
